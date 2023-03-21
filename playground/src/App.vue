@@ -4,16 +4,22 @@ import { useTemplatePromise } from '../../src'
 
 const TemplatePromise = useTemplatePromise<'ok' | 'cancel', [string]>()
 
-async function open() {
-  console.log('Before')
-  const result = await TemplatePromise.start('Hello')
-  console.log('After', result)
+async function open(idx: number) {
+  console.log(idx, 'Before')
+  const result = await TemplatePromise.start(`Hello ${idx}`)
+  console.log(idx, 'After', result)
 }
 </script>
 
 <template>
-  <button @click="open">
-    Open
+  <button @click="open(1)">
+    Open 1
+  </button>
+  <button @click="open(2)">
+    Open 2
+  </button>
+  <button @click="open(1); open(2)">
+    Open 1 & 2
   </button>
   <TemplatePromise v-slot="{ resolve, args }">
     <div class="fixed inset-0 bg-black/10 flex items-center">

@@ -2,7 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/vue-template-promise?color=a1b858&label=)](https://www.npmjs.com/package/vue-template-promise)
 
-Template as Promise in Vue.
+Template as Promise in Vue. Useful for constructing custom Dialogs, Modals, Toasts, etc.
 
 ```html
 <script setup lang="ts">

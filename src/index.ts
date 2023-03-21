@@ -1,7 +1,8 @@
 import type { DefineComponent } from 'vue'
-import { defineComponent, onUnmounted, shallowReactive } from 'vue'
+import { defineComponent, ref, shallowReactive } from 'vue'
 
 export interface TemplatePromiseProps<Return, Args extends any[] = []> {
+  key: number
   promise: Promise<Return> | undefined
   resolve: (v: Return) => void
   reject: (v: any) => void
@@ -19,39 +20,36 @@ export type TemplatePromise<Return, Args extends any[] = []> = DefineComponent<{
 }
 
 export function useTemplatePromise<Return, Args extends any[] = []>(): TemplatePromise<Return, Args> {
-  const props = shallowReactive<TemplatePromiseProps<Return, Args>>({
-    promise: undefined,
-    resolve: () => {},
-    reject: () => {},
-    args: undefined!,
-  })
+  let index = 0
+  const instances = ref<TemplatePromiseProps<Return, Args>[]>([])
 
   function start(...args: Args) {
-    if (!props.promise) {
-      props.args = args
-      props.promise = new Promise<Return>((_resolve, _reject) => {
-        props.resolve = _resolve
-        props.reject = _reject
+    const props = shallowReactive<TemplatePromiseProps<Return, Args>>({
+      key: index++,
+      args,
+      promise: undefined,
+      resolve: () => {},
+      reject: () => {},
+    })
+
+    instances.value.push(props)
+
+    props.promise = new Promise<Return>((_resolve, _reject) => {
+      props.resolve = _resolve
+      props.reject = _reject
+    })
+      .finally(() => {
+        props.promise = undefined
+        const index = instances.value.indexOf(props)
+        if (index !== -1)
+          instances.value.splice(index, 1)
       })
-        .finally(() => {
-          props.promise = undefined
-        })
-    }
-    else {
-      if (process.env.NODE_ENV !== 'production')
-        console.warn('TemplatePromise is already mounted')
-    }
+
     return props.promise
   }
 
   const component = defineComponent((_, { slots }) => {
-    onUnmounted(() => {
-      props.promise = undefined
-    })
-
-    return () => props.promise
-      ? slots.default?.(props)
-      : null
+    return () => instances.value.map(props => slots.default?.(props))
   })
 
   component.start = start
