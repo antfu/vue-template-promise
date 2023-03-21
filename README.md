@@ -63,7 +63,7 @@ In template, use `v-slot` to access the promise and resolve functions.
 </template>
 ```
 
-Rhe slot will not be rendered initially (similar to `v-if="false"`), until you call the `start` method from the component.
+The slot will not be rendered initially (similar to `v-if="false"`), until you call the `start` method from the component.
 
 ```ts
 const result = await TemplatePromise.start()
