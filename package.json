@@ -1,0 +1,77 @@
+{
+  "name": "vue-template-promise",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@7.30.0",
+  "description": "",
+  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/antfu",
+  "homepage": "https://github.com/antfu/vue-template-promise#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antfu/vue-template-promise.git"
+  },
+  "bugs": "https://github.com/antfu/vue-template-promise/issues",
+  "keywords": [],
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*",
+        "./dist/index.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "dev": "nr -C playground dev",
+    "lint": "eslint .",
+    "prepublishOnly": "nr build",
+    "release": "bumpp && npm publish",
+    "start": "esno src/index.ts",
+    "test": "vitest",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.37.0",
+    "@antfu/ni": "^0.20.0",
+    "@antfu/utils": "^0.7.2",
+    "@types/node": "^18.15.5",
+    "bumpp": "^9.0.0",
+    "eslint": "^8.36.0",
+    "esno": "^0.16.3",
+    "lint-staged": "^13.2.0",
+    "pnpm": "^7.30.0",
+    "rimraf": "^4.4.0",
+    "simple-git-hooks": "^2.8.1",
+    "typescript": "^5.0.2",
+    "unbuild": "^1.1.2",
+    "vite": "^4.2.1",
+    "vitest": "^0.29.7",
+    "vue": "^3.2.47",
+    "vue-tsc": "^1.2.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}
