@@ -12,7 +12,7 @@ const TemplatePromise = useTemplatePromise<'ok' | 'cancel'>()
 
 async function open() {
   console.log('Before')
-  const result = await await TemplatePromise.start()
+  const result = await TemplatePromise.start()
   console.log('After', result)
 }
 </script>
