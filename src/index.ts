@@ -7,6 +7,7 @@ export interface TemplatePromiseProps<Return, Args extends any[] = []> {
   resolve: (v: Return) => void
   reject: (v: any) => void
   args: Args
+  loading: boolean
 }
 
 export type TemplatePromise<Return, Args extends any[] = []> = DefineComponent<{}> & {
@@ -30,12 +31,16 @@ export function useTemplatePromise<Return, Args extends any[] = []>(): TemplateP
       promise: undefined,
       resolve: () => {},
       reject: () => {},
+      loading: false,
     })
 
     instances.value.push(props)
 
     props.promise = new Promise<Return>((_resolve, _reject) => {
-      props.resolve = _resolve
+      props.resolve = (v) => {
+        props.loading = true
+        _resolve(v)
+      }
       props.reject = _reject
     })
       .finally(() => {

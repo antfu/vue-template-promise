@@ -2,12 +2,20 @@
 <script setup lang="ts">
 import { useTemplatePromise } from '../../src'
 
-const TemplatePromise = useTemplatePromise<'ok' | 'cancel', [string]>()
+const TemplatePromise = useTemplatePromise<'ok' | 'cancel' | Promise<unknown>, [string]>()
 
 async function open(idx: number) {
   console.log(idx, 'Before')
   const result = await TemplatePromise.start(`Hello ${idx}`)
   console.log(idx, 'After', result)
+}
+
+const asyncFn = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('async fn')
+    }, 2000)
+  })
 }
 </script>
 
@@ -21,7 +29,7 @@ async function open(idx: number) {
   <button @click="open(1); open(2)">
     Open 1 & 2
   </button>
-  <TemplatePromise v-slot="{ resolve, args }">
+  <TemplatePromise v-slot="{ resolve, args, loading }">
     <div class="fixed inset-0 bg-black/10 flex items-center">
       <dialog open class="border-gray/10 shadow rounded ma">
         <div>Dialog {{ args[0] }}</div>
@@ -29,8 +37,8 @@ async function open(idx: number) {
         <button @click="resolve('cancel')">
           Cancel
         </button>
-        <button @click="resolve('ok')">
-          OK
+        <button :disabled="loading" @click="resolve(asyncFn())">
+          {{ loading ? 'saving...' : 'save' }}
         </button>
       </dialog>
     </div>
