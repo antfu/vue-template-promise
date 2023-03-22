@@ -2,12 +2,35 @@ import type { DefineComponent, TransitionGroupProps } from 'vue'
 import { Fragment, TransitionGroup, defineComponent, h, ref, shallowReactive } from 'vue'
 
 export interface TemplatePromiseProps<Return, Args extends any[] = []> {
-  key: number
+  /**
+   * The promise instance.
+   */
   promise: Promise<Return> | undefined
-  resolve: (v: Return) => void
+  /**
+   * Resolve the promise.
+   */
+  resolve: (v: Return | Promise<Return>) => void
+  /**
+   * Reject the promise.
+   */
   reject: (v: any) => void
+  /**
+   * Arguments passed to TemplatePromise.start()
+   */
   args: Args
+  /**
+   * Indicates if the promise is resolving.
+   * When passing another promise to `resolve`, this will be set to `true` until the promise is resolved.
+   */
+  isResolving: boolean
+  /**
+   * Options passed to createTemplatePromise()
+   */
   options: TemplatePromiseOptions
+  /**
+   * Unique key for list rendering.
+   */
+  key: number
 }
 
 export interface TemplatePromiseOptions {
@@ -47,13 +70,17 @@ export function useTemplatePromise<Return, Args extends any[] = []>(
       promise: undefined,
       resolve: () => {},
       reject: () => {},
+      isResolving: false,
       options,
     })
 
     instances.value.push(props)
 
     props.promise = new Promise<Return>((_resolve, _reject) => {
-      props.resolve = _resolve
+      props.resolve = (v) => {
+        props.isResolving = true
+        return _resolve(v)
+      }
       props.reject = _reject
     })
       .finally(() => {
