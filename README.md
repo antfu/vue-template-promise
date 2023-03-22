@@ -8,22 +8,18 @@ Template as Promise in Vue. Useful for constructing custom Dialogs, Modals, Toas
 <script setup lang="ts">
 import { useTemplatePromise } from 'vue-template-promise'
 
-const TemplatePromise = useTemplatePromise<'ok' | 'cancel'>()
+const TemplatePromise = useTemplatePromise<ReturnType>()
 
 async function open() {
-  console.log('Before')
   const result = await TemplatePromise.start()
-  console.log('After', result)
+  // button is clicked, result is 'ok'
 }
 </script>
 
 <template>
-  <button @click="open">Open</button>
-  <TemplatePromise v-slot="{ resolve }">
-    <dialog open>
-      <button @click="resolve('cancel')">Cancel</button>
-      <button @click="resolve('ok')">OK</button>
-    </dialog>
+  <TemplatePromise v-slot="{ promise, resolve, reject, args }">
+    <!-- your UI -->
+    <button @click="resolve('ok')">OK</button>
   </TemplatePromise>
 </template>
 ```
@@ -60,6 +56,9 @@ In template, use `v-slot` to access the promise and resolve functions.
     <!-- you can have anything -->
     <button @click="resolve('ok')">OK</button>
   </TemplatePromise>
+  <MyPromise v-slot="{ promise, resolve, reject, args }">
+    <!-- another one -->
+  </MyPromise>
 </template>
 ```
 
