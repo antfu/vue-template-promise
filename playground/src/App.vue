@@ -2,7 +2,12 @@
 <script setup lang="ts">
 import { useTemplatePromise } from '../../src'
 
-const TemplatePromise = useTemplatePromise<'ok' | 'cancel', [string]>()
+const TemplatePromise = useTemplatePromise<'ok' | 'cancel', [string]>({
+  transition: {
+    name: 'fade',
+    appear: true,
+  },
+})
 
 async function open(idx: number) {
   console.log(idx, 'Before')
@@ -36,3 +41,15 @@ async function open(idx: number) {
     </div>
   </TemplatePromise>
 </template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

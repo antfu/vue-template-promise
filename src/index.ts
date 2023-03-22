@@ -1,5 +1,5 @@
-import type { DefineComponent } from 'vue'
-import { defineComponent, ref, shallowReactive } from 'vue'
+import type { DefineComponent, TransitionGroupProps } from 'vue'
+import { Fragment, TransitionGroup, defineComponent, h, ref, shallowReactive } from 'vue'
 
 export interface TemplatePromiseProps<Return, Args extends any[] = []> {
   key: number
@@ -7,6 +7,21 @@ export interface TemplatePromiseProps<Return, Args extends any[] = []> {
   resolve: (v: Return) => void
   reject: (v: any) => void
   args: Args
+  options: TemplatePromiseOptions
+}
+
+export interface TemplatePromiseOptions {
+  /**
+   * Determines if the promise can be called only once at a time.
+   *
+   * @default false
+   */
+  singltone?: boolean
+
+  /**
+   * Transition props for the promise.
+   */
+  transition?: TransitionGroupProps
 }
 
 export type TemplatePromise<Return, Args extends any[] = []> = DefineComponent<{}> & {
@@ -19,17 +34,20 @@ export type TemplatePromise<Return, Args extends any[] = []> = DefineComponent<{
   start: (...args: Args) => Promise<Return>
 }
 
-export function useTemplatePromise<Return, Args extends any[] = []>(): TemplatePromise<Return, Args> {
+export function useTemplatePromise<Return, Args extends any[] = []>(
+  options: TemplatePromiseOptions = {},
+): TemplatePromise<Return, Args> {
   let index = 0
   const instances = ref<TemplatePromiseProps<Return, Args>[]>([])
 
-  function start(...args: Args) {
+  function create(...args: Args) {
     const props = shallowReactive<TemplatePromiseProps<Return, Args>>({
       key: index++,
       args,
       promise: undefined,
       resolve: () => {},
       reject: () => {},
+      options,
     })
 
     instances.value.push(props)
@@ -48,8 +66,17 @@ export function useTemplatePromise<Return, Args extends any[] = []>(): TemplateP
     return props.promise
   }
 
+  function start(...args: Args) {
+    if (options.singltone && instances.value.length > 0)
+      return instances.value[0].promise
+    return create(...args)
+  }
+
   const component = defineComponent((_, { slots }) => {
-    return () => instances.value.map(props => slots.default?.(props))
+    const renderList = () => instances.value.map(props => h(Fragment, { key: props.key }, slots.default?.(props)))
+    if (options.transition)
+      return () => h(TransitionGroup, options.transition, renderList)
+    return renderList
   })
 
   component.start = start

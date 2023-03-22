@@ -96,6 +96,39 @@ And in the template slot, you can access the arguments via `args` property.
 </template>
 ```
 
+### Transition
+
+You can use transition to animate the slot.
+
+```html
+<script setup lang="ts">
+const TemplatePromise = useTemplatePromise<ReturnType>({
+  transition: {
+    name: 'fade',
+    appear: true,
+  },
+})
+</script>
+
+<template>
+  <TemplatePromise v-slot="{ resolve }">
+    <!-- your UI -->
+    <button @click="resolve('ok')">OK</button>
+  </TemplatePromise>
+</template>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+</style>
+```
+
+Learn more about [Vue Transition](https://v3.vuejs.org/guide/transitions-overview.html).
+
 ## Thanks
 
 Thanks to [@johnsoncodehk](https://github.com/johnsoncodehk) for making Volar and the help to make it type safe.
