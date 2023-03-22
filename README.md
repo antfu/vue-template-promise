@@ -4,6 +4,8 @@
 
 Template as Promise in Vue. Useful for constructing custom Dialogs, Modals, Toasts, etc.
 
+[**Why?**](#why)
+
 ```html
 <script setup lang="ts">
 import { useTemplatePromise } from 'vue-template-promise'
@@ -30,6 +32,8 @@ async function open() {
 - 🧩 **Template** - use Vue template to render, not a new DSL
 - 🦾 **TypeScript** - full type safety via generic type
 - ⚪️ **Renderless** - you take full control of the UI
+- 🚀 **Lightweight** - only <400B gzipped
+- 🎨 **Transition** - use support Vue transition
 
 ## Install
 
@@ -134,6 +138,47 @@ Learn more about [Vue Transition](https://v3.vuejs.org/guide/transitions-overvie
 Thanks to [@johnsoncodehk](https://github.com/johnsoncodehk) for making Volar and the help to make it type safe.
 
 ## FAQ
+
+### Why?
+
+The common approach to call a dialog or a model programmatically would be like this:
+
+```ts
+const dialog = useDialog()
+const result = await dialog.open({
+  title: 'Hello',
+  content: 'World',
+})
+```
+
+This could work nicely by sending those infomation to top level component and let it render the dialog. However, it limits the flexibility you could express in the UI. For example, if you want the title to be read, if you want extra buttons, etc. You might end up with a lot of options like:
+
+```ts
+const result = await dialog.open({
+  title: 'Hello',
+  titleClass: 'text-red',
+  content: 'World',
+  contentClass: 'text-blue text-sm',
+  buttons: [
+    { text: 'OK', class: 'bg-red', onClick: () => {} },
+    { text: 'Cancel', class: 'bg-blue', onClick: () => {} },
+  ],
+  // ...
+})
+```
+
+Even this is not flexible enough. If you want more, you might end up with manual render function.
+
+```ts
+const result = await dialog.open({
+  title: 'Hello',
+  contentSlot: () => h(MyComponent, { content }),
+})
+```
+
+This is like reinventing a new DSL in the script to express the UI template.
+
+So this library is introduce to **express the UI in Vue's template instead of the script**, as where they are supposed to be, and being able to be called programmatically.
 
 ### VueUse?
 
