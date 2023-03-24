@@ -151,7 +151,7 @@ const result = await dialog.open({
 })
 ```
 
-This could work nicely by sending those infomation to top level component and let it render the dialog. However, it limits the flexibility you could express in the UI. For example, if you want the title to be read, if you want extra buttons, etc. You might end up with a lot of options like:
+This could work nicely by sending those infomation to top level component and let it render the dialog. However, it limits the flexibility you could express in the UI. For example, if you want the title to be red, if you want extra buttons, etc. You might end up with a lot of options like:
 
 ```ts
 const result = await dialog.open({
