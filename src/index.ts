@@ -39,7 +39,7 @@ export interface TemplatePromiseOptions {
    *
    * @default false
    */
-  singltone?: boolean
+  singleton?: boolean
 
   /**
    * Transition props for the promise.
@@ -94,7 +94,7 @@ export function useTemplatePromise<Return, Args extends any[] = []>(
   }
 
   function start(...args: Args) {
-    if (options.singltone && instances.value.length > 0)
+    if (options.singleton && instances.value.length > 0)
       return instances.value[0].promise
     return create(...args)
   }
