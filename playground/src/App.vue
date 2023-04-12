@@ -17,7 +17,7 @@ async function open(idx: number) {
   console.log(idx, 'After', result)
 }
 
-const asyncFn = () => {
+function asyncFn() {
   return new Promise<DialogResult>((resolve) => {
     setTimeout(() => {
       resolve('ok')
