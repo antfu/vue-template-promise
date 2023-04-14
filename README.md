@@ -1,3 +1,12 @@
+**🚛 This package is now part of VueUse v10**.
+
+👉 Refer to https://vueuse.org/createTemplatePromise instead.
+
+----
+
+<details>
+  <summary>Legacy README</summary>
+
 # vue-template-promise
 
 [![NPM version](https://img.shields.io/npm/v/vue-template-promise?color=a1b858&label=)](https://www.npmjs.com/package/vue-template-promise)
@@ -182,7 +191,9 @@ So this library is introduce to **express the UI in Vue's template instead of th
 
 ### VueUse?
 
-Probably. I am having this as a separate package to test how this idea works. If it ends up working well, we will consider moving it into VueUse directly.
+Yes: https://vueuse.org/createTemplatePromise/
+
+</details>
 
 ## Sponsors
 
